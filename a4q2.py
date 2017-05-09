@@ -22,12 +22,34 @@ y_noisy = [m.sin(k) + rand.gauss(0, .1) for k in x]
 # Write your function for moving average filtering here.  See the assignment description
 # for details.
 def filter_noise(y, r):
-    z = [0] * r
-    print(z)
+
+    try:
+        if r < 0 or r > len(y) / 2:
+            raise ValueError('The radius value is not valid!')
+        else:
+            filtered_y = []
+            for num, val in enumerate(y):
+                if num < r or num >= len(y) - r:
+                    filtered_y.append(0)
+                else:
+                    avg_val = 0
+                    for _ in range(-r,r+1):
+                        avg_val += y[num+_]
+                    avg_val = avg_val / (r * 2 + 1)
+                    filtered_y.append(avg_val)
+            return filtered_y
+    except ValueError as e:
+        print(e)
+
+# part (b):
+# write a function call here to filter y_noisy with a filter of radius 9 and obtain the filtered signal.
+filtered_y = filter_noise(y_noisy, 9)
+
 
 # part (b):
 # write a function call here to filter y_noisy with a filter of radius 9 and obtain the filtered signal.
 filter_noise(y_noisy, 9)
+
 
 # part (c):
 # Now write code to plot the noisy signal and the filtered signal in separate figure windows.
@@ -38,13 +60,16 @@ filter_noise(y_noisy, 9)
 #
 #    figure(), plot(), show(), xlim(), ylim(), xlabel(), ylabel(), title()
 
+#plt.plot(filtered_y)
+
 # You need to call plt.figure() once for EACH figure you prepare.  Uncomment this line when you are ready
-#plt.figure()
 
 # PLOT THE ORIGINAL, NOISY SIGNAL HERE
-
-
-#plt.figure()
+plt.figure()
+plt.plot(y_noisy)
 
 # PLOT THE SMOOTHED SIGNAL HERE
+plt.figure()
+plt.plot(filtered_y)
 
+plt.show()
